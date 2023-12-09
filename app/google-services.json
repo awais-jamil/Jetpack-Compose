@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900176350977",
+    "project_id": "jetpackchat-2a85e",
+    "storage_bucket": "jetpackchat-2a85e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900176350977:android:9ef6751fe5e35125f59500",
+        "android_client_info": {
+          "package_name": "com.awais.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDL3e2clL6dLaLKkehRpe0ewkn8u8Fw_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

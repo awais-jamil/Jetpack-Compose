@@ -37,4 +37,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("com.google.firebase:firebase-firestore:24.0.0")
+    implementation("com.google.firebase:firebase-auth:21.0.1")
 }
