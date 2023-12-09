@@ -33,13 +33,19 @@ import com.awais.ui.PrimaryButton
 import com.awais.ui.TextButton
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel) {
+fun LoginScreen(viewModel: AuthViewModel, navigateToHome: () -> Unit) {
     
     val TAG = "LoginScreen"
     
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
+    
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+    
+    if (isLoggedIn) {
+        navigateToHome()
+    }
     
     val loading by viewModel.loading.collectAsState()
     
