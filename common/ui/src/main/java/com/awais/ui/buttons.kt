@@ -3,8 +3,11 @@ package com.awais.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,10 +20,15 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     enabled: Boolean = true,
+    loading: Boolean = false,
     content: @Composable () -> Unit = {},
 ) {
     Button(
-        onClick = onClick,
+        onClick = {
+            if (!loading) {
+                onClick()
+            }
+        },
         enabled = enabled,
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
@@ -29,7 +37,17 @@ fun PrimaryButton(
         ),
         modifier = modifier
     ) {
-        content()
+        
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(20.dp)
+                    .height(20.dp),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        } else {
+            content()
+        }
     }
 }
 
