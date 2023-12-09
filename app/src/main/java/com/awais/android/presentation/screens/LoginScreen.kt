@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,7 +41,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
     val password = remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
     
-    val loading = remember { viewModel.loading }
+    val loading by viewModel.loading.collectAsState()
     
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -106,7 +108,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
                     Text("Login")
                 },
                 enabled = email.value.isNotEmpty() || password.value.isNotEmpty(),
-                loading = false,
+                loading = loading,
                 onClick = {
                     Log.d(TAG, "Login clicked")
                     viewModel.login(email.value, password.value)
