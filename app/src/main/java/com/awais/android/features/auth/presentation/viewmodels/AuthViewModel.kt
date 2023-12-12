@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.awais.android.features.auth.domain.usecases.CurrentUserUC
 import com.awais.android.features.auth.domain.usecases.LoginUC
+import com.awais.android.features.auth.domain.usecases.LogoutUC
 import com.awais.android.features.auth.domain.usecases.SignUpUC
 import com.awais.android.features.auth.domain.usecases.StoreUserUC
 import com.awais.android.utils.Response
@@ -18,6 +19,7 @@ class AuthViewModel @Inject constructor(
     private val currentUC: CurrentUserUC,
     private val signUpUC: SignUpUC,
     private val storeUserUC: StoreUserUC,
+    private val logoutUC: LogoutUC,
 ) : ViewModel() {
     
     val currentUserId = MutableStateFlow("")
@@ -55,7 +57,26 @@ class AuthViewModel @Inject constructor(
     }
     
     fun logout() {
-    
+        viewModelScope.launch {
+            logoutUC.invoke().collect { result ->
+                when (result) {
+                    is Response.Success -> {
+                        loading.value = false
+                        isLoggedIn.value = false
+                        isAuthenticationLoaded.value = false
+                    }
+                    
+                    is Response.Error -> {
+                        loading.value = false
+                        error.value = result.message
+                    }
+                    
+                    is Response.Loading -> {
+                        loading.value = true
+                    }
+                }
+            }
+        }
     }
     
     fun signUp(email: String, password: String, firstName: String, lastName: String) {

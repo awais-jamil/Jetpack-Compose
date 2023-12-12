@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     addSplashScreen(actions = navActions, authViewModel = viewModel)
                     addLoginScreen(actions = navActions, authViewModel = viewModel)
                     addSignupScreen(actions = navActions, authViewModel = viewModel)
-                    addHomeScreen(actions = navActions)
+                    addHomeScreen(actions = navActions, authViewModel = viewModel)
                 }
             }
         }
@@ -85,8 +85,11 @@ private fun NavGraphBuilder.addSignupScreen(actions: NavActions, authViewModel: 
     }
 }
 
-private fun NavGraphBuilder.addHomeScreen(actions: NavActions) {
+private fun NavGraphBuilder.addHomeScreen(actions: NavActions, authViewModel: AuthViewModel) {
     composable("home") {
-        HomeScreen()
+        HomeScreen(
+            authViewModel = authViewModel,
+            onLogout = { actions.navigateToLogin() },
+        )
     }
 }

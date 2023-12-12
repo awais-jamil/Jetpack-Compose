@@ -1,27 +1,178 @@
 package com.awais.android.features.home.presentation.screens
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    authViewModel: AuthViewModel,
+    onLogout: () -> Unit,
+) {
+    var currentScreen by remember { mutableStateOf(Screen.Chats) }
+    
+    Scaffold(
+        topBar = {
+            MyAppBar(
+                title = currentScreen.title,
+                onLogout = {
+                    authViewModel.logout()
+                    onLogout()
+                }
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                onScreenSelected = { screen -> currentScreen = screen },
+            )
+        },
+        content = { innerPadding ->
+            Box(
+                modifier = Modifier.padding(
+                    PaddingValues(
+                        0.dp,
+                        0.dp,
+                        0.dp,
+                        innerPadding.calculateBottomPadding()
+                    )
+                )
+            ) {
+                when (currentScreen) {
+                    Screen.Chats -> ChatsScreen()
+                    Screen.Friends -> FriendsScreen()
+                    else -> {
+                        Text("404 page not found")
+                    }
+                }
+            }
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
-    Scaffold(
-        topBar = {
-            // create top bar
-        },
-        bottomBar = {
-            // create bottom bar
-        },
-        content = {
+fun MyAppBar(
+    title: String,
+    onLogout: () -> Unit,
+) {
+    TopAppBar(
+        title = {
             Text(
-                modifier = Modifier.padding(it),
-                text = "Home Screen"
+                text = title,
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold,
+                ),
             )
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+        ),
+        actions = {
+            IconButton(onClick = { onLogout() }) {
+                Icon(
+                    Icons.Filled.ExitToApp,
+                    contentDescription = "logout",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     )
+}
+
+@Composable
+fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
+    val items = listOf(
+        Screen.Chats,
+        Screen.Friends,
+    )
+    var selectedItem by remember { mutableIntStateOf(0) }
+    NavigationBar(
+//        containerColor = MaterialTheme.colorScheme.primary,
+//        contentColor = MaterialTheme.colorScheme.onPrimary
+    ) {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                alwaysShowLabel = true,
+                icon = {
+                    Icon(
+                        item.icon,
+                        contentDescription = item.title,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                },
+                label = {
+                    Text(
+                        item.title,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    )
+                },
+                selected = selectedItem == index,
+                onClick = {
+                    selectedItem = index
+                    onScreenSelected(item)
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChatsScreen() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        val itemsList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
+        
+        items(itemsList.size) { index ->
+            ListItem(headlineText = { Text(itemsList[index]) })
+        }
+    }
+}
+
+@Composable
+fun FriendsScreen() {
+    Text("Favorites Screen Content")
+}
+
+
+enum class Screen(val title: String, val icon: ImageVector) {
+    Chats("Chats", Icons.Filled.MailOutline),
+    Friends("Friends", Icons.Filled.List),
 }
