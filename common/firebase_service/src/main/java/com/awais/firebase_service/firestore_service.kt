@@ -12,8 +12,12 @@ class FirestoreService<T : Any>(
     fun addDocument(data: T, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         firestore.collection(collectionPath)
             .add(data)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure(it) }
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                onFailure(it)
+            }
     }
     
     fun updateDocument(

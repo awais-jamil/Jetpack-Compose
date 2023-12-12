@@ -7,6 +7,7 @@ interface AuthRepository {
     suspend fun signIn(email: String, password: String): Flow<Response<String>>
     suspend fun signUp(email: String, password: String): Flow<Response<String>>
     suspend fun storeUserInfo(
+        email: String,
         userId: String,
         firstName: String,
         lastName: String,

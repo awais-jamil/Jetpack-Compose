@@ -33,18 +33,17 @@ class AuthViewModel @Inject constructor(
         loading.value = true
         viewModelScope.launch {
             loginUC.invoke(email, password).collect { result ->
+                isAuthenticationLoaded.value = true
                 when (result) {
                     is Response.Success -> {
                         loading.value = false
                         isLoggedIn.value = true
-                        isAuthenticationLoaded.value = true
                         currentUserId.value = result.data
                     }
                     
                     is Response.Error -> {
                         loading.value = false
                         error.value = result.message
-                        isAuthenticationLoaded.value = false
                         currentUserId.value = ""
                     }
                     
@@ -59,11 +58,11 @@ class AuthViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             logoutUC.invoke().collect { result ->
+                isAuthenticationLoaded.value = true
                 when (result) {
                     is Response.Success -> {
                         loading.value = false
                         isLoggedIn.value = false
-                        isAuthenticationLoaded.value = false
                     }
                     
                     is Response.Error -> {
@@ -72,7 +71,6 @@ class AuthViewModel @Inject constructor(
                     }
                     
                     is Response.Loading -> {
-                        loading.value = true
                     }
                 }
             }
@@ -80,6 +78,7 @@ class AuthViewModel @Inject constructor(
     }
     
     fun signUp(email: String, password: String, firstName: String, lastName: String) {
+        loading.value = true
         viewModelScope.launch {
             signUpUC.invoke(email, password).collect { result ->
                 when (result) {
@@ -88,27 +87,25 @@ class AuthViewModel @Inject constructor(
                         isLoggedIn.value = true
                         isAuthenticationLoaded.value = true
                         currentUserId.value = result.data
-                        storeUserInfo(result.data, firstName, lastName)
+                        storeUserInfo(email, result.data, firstName, lastName)
                     }
                     
                     is Response.Error -> {
                         loading.value = false
                         error.value = result.message
-                        isAuthenticationLoaded.value = false
+                        isAuthenticationLoaded.value = true
                         currentUserId.value = ""
                     }
                     
-                    is Response.Loading -> {
-                        loading.value = true
-                    }
+                    is Response.Loading -> {}
                 }
             }
         }
     }
     
-    private fun storeUserInfo(userId: String, firstName: String, lastName: String) {
+    private fun storeUserInfo(email: String, userId: String, firstName: String, lastName: String) {
         viewModelScope.launch {
-            storeUserUC.invoke(userId, firstName, lastName).collect { result ->
+            storeUserUC.invoke(email, userId, firstName, lastName).collect { result ->
                 when (result) {
                     is Response.Success -> {
                         loading.value = false
@@ -131,24 +128,22 @@ class AuthViewModel @Inject constructor(
     fun getCurrentUser() {
         viewModelScope.launch {
             currentUC.invoke().collect { result ->
+                isAuthenticationLoaded.value = true
                 when (result) {
                     is Response.Success -> {
                         loading.value = false
-                        isLoggedIn.value = true
-                        
                         if (result.data != null) {
                             currentUserId.value = result.data
-                            isAuthenticationLoaded.value = true
+                            isLoggedIn.value = true
                         } else {
                             currentUserId.value = ""
-                            isAuthenticationLoaded.value = false
+                            isLoggedIn.value = false
                         }
                     }
                     
                     is Response.Error -> {
                         loading.value = false
                         error.value = result.message
-                        isAuthenticationLoaded.value = false
                         currentUserId.value = ""
                     }
                     
