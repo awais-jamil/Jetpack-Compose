@@ -1,6 +1,4 @@
-package com.awais.android.presentation.screens
-
-// create composable  screen for login
+package com.awais.android.features.auth.presentation.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,20 +25,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.awais.android.presentation.viewmodels.AuthViewModel
+import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
 import com.awais.ui.CustomTextField
 import com.awais.ui.PrimaryButton
 import com.awais.ui.TextButton
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, navigateToHome: () -> Unit) {
+fun SignUpScreen(
+    viewModel: AuthViewModel,
+    navigateToHome: () -> Unit,
+    navigateToLogin: () -> Unit,
+) {
     
-    val TAG = "LoginScreen"
+    val tag = "SignupScreen"
     
+    val firstName = remember { mutableStateOf("") }
+    val lastName = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val showPassword = remember { mutableStateOf(false) }
     
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     
@@ -60,6 +65,70 @@ fun LoginScreen(viewModel: AuthViewModel, navigateToHome: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            
+            Text(
+                text = "Create Account",
+                style = MaterialTheme.typography.displayLarge.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                ),
+                modifier = Modifier.padding(bottom = 40.dp)
+            )
+            
+            CustomTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = firstName.value,
+                hintText = "Enter first Name",
+                labelText = "First Name",
+                maxLines = 1,
+                onValueChange = {
+                    firstName.value = it
+                },
+                validator = {
+                    if (it.isEmpty()) {
+                        "firstname cannot be empty"
+                    } else {
+                        ""
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = "Person icon",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            CustomTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = lastName.value,
+                hintText = "Enter last Name",
+                labelText = "Last Name",
+                maxLines = 1,
+                onValueChange = {
+                    lastName.value = it
+                },
+                validator = {
+                    if (it.isEmpty()) {
+                        "lastname cannot be empty"
+                    } else {
+                        ""
+                    }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = "Person icon",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
             CustomTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email.value,
@@ -111,13 +180,13 @@ fun LoginScreen(viewModel: AuthViewModel, navigateToHome: () -> Unit) {
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 content = {
-                    Text("Login")
+                    Text("SignUp")
                 },
                 enabled = email.value.isNotEmpty() || password.value.isNotEmpty(),
                 loading = loading,
                 onClick = {
-                    Log.d(TAG, "Login clicked")
-                    viewModel.login(email.value, password.value)
+                    Log.d(tag, "SignUp clicked")
+                    viewModel.signUp(email.value, password.value, firstName.value, lastName.value)
                 }
             )
             
@@ -128,9 +197,10 @@ fun LoginScreen(viewModel: AuthViewModel, navigateToHome: () -> Unit) {
                 Spacer(modifier = Modifier.width(8.dp))
                 TextButton(
                     modifier = Modifier,
-                    title = "SignUp",
+                    title = "Login",
                     onClick = {
-                        Log.d(TAG, "SignUp clicked")
+                        Log.d(tag, "Login clicked")
+                        navigateToLogin()
                     }
                 )
             }

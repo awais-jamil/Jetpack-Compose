@@ -1,4 +1,4 @@
-package com.awais.android.presentation.screens
+package com.awais.android.features.home.presentation.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
