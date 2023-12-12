@@ -3,9 +3,7 @@ package com.awais.android.features.home.presentation.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.List
@@ -13,7 +11,6 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -31,16 +28,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
+import com.awais.android.features.chats.presentation.screens.ChatsScreen
+import com.awais.android.features.friends.presentation.screens.FriendsScreen
+import com.awais.android.features.friends.presentation.viewmodels.FriendsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     authViewModel: AuthViewModel,
+    friendsViewModel: FriendsViewModel,
     onLogout: () -> Unit,
 ) {
     var currentScreen by remember { mutableStateOf(Screen.Chats) }
+
+//    LaunchedEffect(Unit) {
+//        friendsViewModel.fetchFriends(authViewModel.currentUserId.value)
+//    }
     
     Scaffold(
         topBar = {
@@ -62,7 +68,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(
                     PaddingValues(
                         0.dp,
-                        0.dp,
+                        innerPadding.calculateTopPadding(),
                         0.dp,
                         innerPadding.calculateBottomPadding()
                     )
@@ -70,7 +76,7 @@ fun HomeScreen(
             ) {
                 when (currentScreen) {
                     Screen.Chats -> ChatsScreen()
-                    Screen.Friends -> FriendsScreen()
+                    Screen.Friends -> FriendsScreen(hiltViewModel())
                     else -> {
                         Text("404 page not found")
                     }
@@ -150,27 +156,6 @@ fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ChatsScreen() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        val itemsList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
-        
-        items(itemsList.size) { index ->
-            ListItem(headlineText = { Text(itemsList[index]) })
-        }
-    }
-}
-
-@Composable
-fun FriendsScreen() {
-    Text("Favorites Screen Content")
-}
-
 
 enum class Screen(val title: String, val icon: ImageVector) {
     Chats("Chats", Icons.Filled.MailOutline),

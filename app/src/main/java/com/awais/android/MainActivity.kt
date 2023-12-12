@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.awais.android.features.auth.presentation.screens.LoginScreen
 import com.awais.android.features.auth.presentation.screens.SignUpScreen
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
+import com.awais.android.features.friends.presentation.viewmodels.FriendsViewModel
 import com.awais.android.features.home.presentation.screens.HomeScreen
 import com.awais.android.features.splash.SplashScreen
 import com.awais.android.theme.JetpackProjectTheme
@@ -27,13 +28,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             JetpackProjectTheme {
                 val viewModel = hiltViewModel<AuthViewModel>()
+                val friendsViewModel = hiltViewModel<FriendsViewModel>()
                 val navController = rememberNavController()
                 val navActions = remember(navController) { NavActions(navController) }
                 NavHost(navController = navController, startDestination = "splash") {
                     addSplashScreen(actions = navActions, authViewModel = viewModel)
                     addLoginScreen(actions = navActions, authViewModel = viewModel)
                     addSignupScreen(actions = navActions, authViewModel = viewModel)
-                    addHomeScreen(actions = navActions, authViewModel = viewModel)
+                    addHomeScreen(
+                        actions = navActions,
+                        authViewModel = viewModel,
+                        friendsViewModel = friendsViewModel
+                    )
                 }
             }
         }
@@ -85,10 +91,16 @@ private fun NavGraphBuilder.addSignupScreen(actions: NavActions, authViewModel: 
     }
 }
 
-private fun NavGraphBuilder.addHomeScreen(actions: NavActions, authViewModel: AuthViewModel) {
+private fun NavGraphBuilder.addHomeScreen(
+    actions: NavActions,
+    authViewModel: AuthViewModel,
+    friendsViewModel: FriendsViewModel,
+) {
+    friendsViewModel.fetchFriends(authViewModel.currentUserId.value)
     composable("home") {
         HomeScreen(
             authViewModel = authViewModel,
+            friendsViewModel = friendsViewModel,
             onLogout = { actions.navigateToLogin() },
         )
     }

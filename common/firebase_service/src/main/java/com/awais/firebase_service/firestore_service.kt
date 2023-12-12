@@ -56,6 +56,20 @@ class FirestoreService<T : Any>(
             }
     }
     
+    
+    fun getDocuments(query: Query, onSuccess: (List<T>) -> Unit, onFailure: (Exception) -> Unit) {
+        query.get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documents = task.result?.documents
+                    val items = documents?.mapNotNull { it.toObject(clazz) }
+                    onSuccess(items ?: emptyList())
+                } else {
+                    onFailure(task.exception ?: Exception("Documents not found"))
+                }
+            }
+    }
+    
     fun addRealtimeUpdates(
         query: Query,
         onResult: (List<T>) -> Unit,

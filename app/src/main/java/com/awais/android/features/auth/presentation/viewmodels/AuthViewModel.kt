@@ -25,7 +25,7 @@ class AuthViewModel @Inject constructor(
     val currentUserId = MutableStateFlow("")
     
     val loading = MutableStateFlow(false)
-    val error = MutableStateFlow("")
+    private val error = MutableStateFlow("")
     val isLoggedIn = MutableStateFlow(false)
     val isAuthenticationLoaded = MutableStateFlow(false)
     
