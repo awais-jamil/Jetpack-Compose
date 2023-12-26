@@ -28,9 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
-import com.awais.android.features.friends.presentation.screens.FriendsScreen
+import com.awais.android.features.news.presentation.screens.CryptoScreen
 import com.awais.android.features.news.presentation.screens.NewsScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -70,7 +69,7 @@ fun HomeScreen(
             ) {
                 when (currentScreen) {
                     Screen.News -> NewsScreen()
-                    Screen.Friends -> FriendsScreen(hiltViewModel())
+                    Screen.Crypto -> CryptoScreen()
                     else -> {
                         Text("404 page not found")
                     }
@@ -115,7 +114,7 @@ fun MyAppBar(
 fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
     val items = listOf(
         Screen.News,
-        Screen.Friends,
+        Screen.Crypto,
     )
     var selectedItem by remember { mutableIntStateOf(0) }
     NavigationBar {
@@ -150,5 +149,5 @@ fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
 
 enum class Screen(val title: String, val icon: ImageVector) {
     News("News", Icons.Filled.MailOutline),
-    Friends("Friends", Icons.Filled.List),
+    Crypto("Crypto", Icons.Filled.List),
 }
