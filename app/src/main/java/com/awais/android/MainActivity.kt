@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
                     addHomeScreen(
                         actions = navActions,
                         authViewModel = viewModel,
-                        friendsViewModel = friendsViewModel
                     )
                 }
             }
@@ -94,13 +93,10 @@ private fun NavGraphBuilder.addSignupScreen(actions: NavActions, authViewModel: 
 private fun NavGraphBuilder.addHomeScreen(
     actions: NavActions,
     authViewModel: AuthViewModel,
-    friendsViewModel: FriendsViewModel,
 ) {
-    friendsViewModel.fetchFriends(authViewModel.currentUserId.value)
     composable("home") {
         HomeScreen(
             authViewModel = authViewModel,
-            friendsViewModel = friendsViewModel,
             onLogout = { actions.navigateToLogin() },
         )
     }

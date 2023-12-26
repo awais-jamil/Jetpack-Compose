@@ -30,23 +30,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
-import com.awais.android.features.chats.presentation.screens.ChatsScreen
 import com.awais.android.features.friends.presentation.screens.FriendsScreen
-import com.awais.android.features.friends.presentation.viewmodels.FriendsViewModel
+import com.awais.android.features.news.presentation.screens.NewsScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     authViewModel: AuthViewModel,
-    friendsViewModel: FriendsViewModel,
     onLogout: () -> Unit,
 ) {
-    var currentScreen by remember { mutableStateOf(Screen.Chats) }
-
-//    LaunchedEffect(Unit) {
-//        friendsViewModel.fetchFriends(authViewModel.currentUserId.value)
-//    }
+    var currentScreen by remember { mutableStateOf(Screen.News) }
     
     Scaffold(
         topBar = {
@@ -75,7 +69,7 @@ fun HomeScreen(
                 )
             ) {
                 when (currentScreen) {
-                    Screen.Chats -> ChatsScreen()
+                    Screen.News -> NewsScreen()
                     Screen.Friends -> FriendsScreen(hiltViewModel())
                     else -> {
                         Text("404 page not found")
@@ -120,14 +114,11 @@ fun MyAppBar(
 @Composable
 fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
     val items = listOf(
-        Screen.Chats,
+        Screen.News,
         Screen.Friends,
     )
     var selectedItem by remember { mutableIntStateOf(0) }
-    NavigationBar(
-//        containerColor = MaterialTheme.colorScheme.primary,
-//        contentColor = MaterialTheme.colorScheme.onPrimary
-    ) {
+    NavigationBar {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 alwaysShowLabel = true,
@@ -158,6 +149,6 @@ fun BottomNavigationBar(onScreenSelected: (Screen) -> Unit) {
 }
 
 enum class Screen(val title: String, val icon: ImageVector) {
-    Chats("Chats", Icons.Filled.MailOutline),
+    News("News", Icons.Filled.MailOutline),
     Friends("Friends", Icons.Filled.List),
 }
