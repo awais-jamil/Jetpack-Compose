@@ -9,9 +9,9 @@ object Constants {
 }
 
 object BASEURLS {
-    const val NEWS_BASE_URL = "https://newsapi.org/v2"
+    const val NEWS_BASE_URL = "https://newsapi.org/v2/"
 }
 
 object EndPoints {
-    const val GET_NEWS = "/everything"
+    const val GET_NEWS = "everything"
 }

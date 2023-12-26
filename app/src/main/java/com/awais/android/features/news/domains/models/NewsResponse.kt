@@ -1,4 +1,7 @@
 package com.awais.android.features.news.domains.models
 
-class NewsResponse {
-}
+data class NewsResponse(
+    val status: String,
+    val totalResults: Long,
+    val articles: List<NewsArticle>,
+)

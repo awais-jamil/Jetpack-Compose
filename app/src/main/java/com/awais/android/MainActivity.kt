@@ -15,6 +15,7 @@ import com.awais.android.features.auth.presentation.screens.SignUpScreen
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
 import com.awais.android.features.friends.presentation.viewmodels.FriendsViewModel
 import com.awais.android.features.home.presentation.screens.HomeScreen
+import com.awais.android.features.news.presentation.viewmodels.NewsViewModel
 import com.awais.android.features.splash.SplashScreen
 import com.awais.android.theme.JetpackProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,15 +30,26 @@ class MainActivity : ComponentActivity() {
             JetpackProjectTheme {
                 val viewModel = hiltViewModel<AuthViewModel>()
                 val friendsViewModel = hiltViewModel<FriendsViewModel>()
+                val newsViewModel = hiltViewModel<NewsViewModel>()
                 val navController = rememberNavController()
                 val navActions = remember(navController) { NavActions(navController) }
                 NavHost(navController = navController, startDestination = "splash") {
-                    addSplashScreen(actions = navActions, authViewModel = viewModel)
-                    addLoginScreen(actions = navActions, authViewModel = viewModel)
-                    addSignupScreen(actions = navActions, authViewModel = viewModel)
+                    addSplashScreen(
+                        actions = navActions,
+                        authViewModel = viewModel,
+                    )
+                    addLoginScreen(
+                        actions = navActions,
+                        authViewModel = viewModel,
+                    )
+                    addSignupScreen(
+                        actions = navActions,
+                        authViewModel = viewModel,
+                    )
                     addHomeScreen(
                         actions = navActions,
                         authViewModel = viewModel,
+                        newsViewModel = newsViewModel,
                     )
                 }
             }
@@ -60,7 +72,10 @@ class NavActions(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.addSplashScreen(actions: NavActions, authViewModel: AuthViewModel) {
+private fun NavGraphBuilder.addSplashScreen(
+    actions: NavActions,
+    authViewModel: AuthViewModel,
+) {
     composable("splash") {
         SplashScreen(
             viewModel = authViewModel,
@@ -70,7 +85,10 @@ private fun NavGraphBuilder.addSplashScreen(actions: NavActions, authViewModel: 
     }
 }
 
-private fun NavGraphBuilder.addLoginScreen(actions: NavActions, authViewModel: AuthViewModel) {
+private fun NavGraphBuilder.addLoginScreen(
+    actions: NavActions,
+    authViewModel: AuthViewModel,
+) {
     composable("login") {
         LoginScreen(
             viewModel = authViewModel,
@@ -80,7 +98,10 @@ private fun NavGraphBuilder.addLoginScreen(actions: NavActions, authViewModel: A
     }
 }
 
-private fun NavGraphBuilder.addSignupScreen(actions: NavActions, authViewModel: AuthViewModel) {
+private fun NavGraphBuilder.addSignupScreen(
+    actions: NavActions,
+    authViewModel: AuthViewModel,
+) {
     composable("signup") {
         SignUpScreen(
             viewModel = authViewModel,
@@ -93,10 +114,12 @@ private fun NavGraphBuilder.addSignupScreen(actions: NavActions, authViewModel: 
 private fun NavGraphBuilder.addHomeScreen(
     actions: NavActions,
     authViewModel: AuthViewModel,
+    newsViewModel: NewsViewModel,
 ) {
     composable("home") {
         HomeScreen(
             authViewModel = authViewModel,
+            newsViewModel = newsViewModel,
             onLogout = { actions.navigateToLogin() },
         )
     }

@@ -31,12 +31,14 @@ import androidx.compose.ui.unit.dp
 import com.awais.android.features.auth.presentation.viewmodels.AuthViewModel
 import com.awais.android.features.news.presentation.screens.CryptoScreen
 import com.awais.android.features.news.presentation.screens.NewsScreen
+import com.awais.android.features.news.presentation.viewmodels.NewsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     authViewModel: AuthViewModel,
+    newsViewModel: NewsViewModel,
     onLogout: () -> Unit,
 ) {
     var currentScreen by remember { mutableStateOf(Screen.News) }
@@ -68,7 +70,10 @@ fun HomeScreen(
                 )
             ) {
                 when (currentScreen) {
-                    Screen.News -> NewsScreen()
+                    Screen.News -> NewsScreen(
+                        viewModel = newsViewModel,
+                    )
+                    
                     Screen.Crypto -> CryptoScreen()
                     else -> {
                         Text("404 page not found")

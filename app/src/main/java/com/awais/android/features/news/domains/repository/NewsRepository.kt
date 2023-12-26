@@ -1,9 +1,8 @@
 package com.awais.android.features.news.domains.repository
 
 import com.awais.android.features.news.domains.models.NewsResponse
-import com.awais.android.utils.Response
-import kotlinx.coroutines.flow.Flow
+import com.awais.api_service.ApiResponse
 
 interface NewsRepository {
-    suspend fun getNewsArticles(): Flow<Response<NewsResponse>>
+    suspend fun getNewsArticles(): ApiResponse<NewsResponse>
 }

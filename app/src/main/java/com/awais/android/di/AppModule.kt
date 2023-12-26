@@ -1,11 +1,13 @@
 package com.awais.android.di
 
+import com.awais.android.core.BASEURLS
 import com.awais.android.features.auth.data.repository.AuthRepositoryImp
 import com.awais.android.features.auth.domain.repository.AuthRepository
 import com.awais.android.features.friends.data.repository.FriendsRepositoryImp
 import com.awais.android.features.friends.domains.repository.FriendsRepository
 import com.awais.android.features.news.data.repository.NewsRepositoryImp
 import com.awais.android.features.news.domains.repository.NewsRepository
+import com.awais.api_service.ApiService
 import com.awais.firebase_service.FirebaseAuthService
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -52,6 +54,9 @@ object HiltModule {
     @Singleton
     fun provideNewsRepository(
     ): NewsRepository {
-        return NewsRepositoryImp()
+        val apiService = ApiService(BASEURLS.NEWS_BASE_URL)
+        return NewsRepositoryImp(
+            apiService,
+        )
     }
 }
